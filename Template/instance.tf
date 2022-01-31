@@ -62,7 +62,7 @@ key_name = var.key_name
       "sudo apt install -y docker*",
       "sudo usermod -aG docker $USER",
       "sudo chmod 666 /var/run/docker.sock",
-      "sudo usermod -G root $USER",
+      "sudo usermod -aG root $USER",
       "sudo apt install -y unzip",
       "curl \"https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip\" -o awscliv2.zip",
       "unzip awscliv2.zip",
