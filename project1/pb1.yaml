@@ -1,0 +1,34 @@
+---
+- name: Create Ec2 instances
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: Launch ec2 instances
+    tags: ['ec2-create']
+    ec2:
+      region: ap-southeast-1
+      key_name: ec2-sg-key
+      instance_type: t2.micro
+      image: ami-07315f74f3fa6a5a3
+      wait: yes
+      group: default
+      count: 1
+      vpc_subnet_id: subnet-0a8fe73c06936d705
+      assign_public_ip: yes
+      instance_tags:
+        Name: Deploy
+        os: ubuntu
+    register: ec2
+    
+  - name: Wait for system to become reachable
+    wait_for:
+      port: 22
+      host: '{{ ec2.instances[0].public_ip }}'
+      search_regex: OpenSSH
+      delay: 10
+
+  - name: Creating the EC2 group
+    shell: echo [ec2] > host
+
+  - name: Adding new Host 
+    shell: echo "{{ ec2.instances[0].public_ip }} ansible_user=ubuntu" >> host
